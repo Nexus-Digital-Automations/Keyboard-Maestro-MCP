@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/types/values.py
+# hypothesis_version: 6.135.14
+
+[0.0, 0.5, 1.0, 255, 300, 1024, 65535, '#', '..', '/', 'ColorRGB', 'ConfidenceScore', 'FilePath', 'Host cannot be empty', 'PixelColor', 'ProcessID', 'ScreenCoordinate', 'ScreenCoordinates', 'TriggerValue', 'VariableValue', 'blue', 'green', 'http', 'https', 'red', 'ws', 'wss']

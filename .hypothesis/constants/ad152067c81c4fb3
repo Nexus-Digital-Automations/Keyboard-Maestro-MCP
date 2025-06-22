@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/boundaries/security_boundaries.py
+# hypothesis_version: 6.135.14
+
+[300, 3600, '-e', '..', '/', '/System', '/bin', '/private', '/sbin', '/usr', 'Application Support', 'Bookmarks.plist', 'Keychains', 'Library', 'Rate limit exceeded', 'Safari', 'Too many requests', 'accessibility', 'anonymous', 'authenticated', 'authorized', 'automation', 'calendars', 'camera', 'contacts', 'create_directory', 'create_macro', 'delete_file', 'delete_macro', 'execute_macro', 'export_macro', 'file', 'file_path', 'full_disk_access', 'import_macro', 'macro', 'macro_id', 'microphone', 'modify_macro', 'move_file', 'notifications', 'osascript', 'privileged', 'public', 'reminders', 'restricted', 'screen_recording', 'write_file']

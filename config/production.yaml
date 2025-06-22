@@ -1,0 +1,174 @@
+# Production Configuration for Keyboard Maestro MCP Server
+# config/production.yaml
+
+server:
+  name: "keyboard-maestro-mcp-server"
+  version: "1.0.0"
+  description: "Comprehensive macOS automation server"
+  
+  # Transport configuration
+  transport:
+    type: "streamable-http"
+    host: "0.0.0.0"
+    port: 8080
+    ssl:
+      enabled: false
+      cert_file: null
+      key_file: null
+  
+  # Performance settings
+  performance:
+    max_concurrent_operations: 100
+    operation_timeout: 30
+    request_timeout: 60
+    keepalive_timeout: 65
+    max_request_size: 10485760  # 10MB
+    
+  # Resource limits
+  resources:
+    memory_limit: 512  # MB
+    cpu_limit: 2.0     # CPU cores
+    disk_usage_limit: 1024  # MB
+
+# Authentication and Security
+auth:
+  required: true
+  provider: "bearer"
+  jwt:
+    secret_key: "${JWT_SECRET_KEY}"
+    algorithm: "HS256"
+    expiration: 3600
+    issuer: "keyboard-maestro-mcp"
+    audience: "mcp-clients"
+  
+  # Permission validation
+  permissions:
+    accessibility_required: true
+    file_system_validation: "strict"
+    applescript_validation: true
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "json"
+  output:
+    console: true
+    file:
+      enabled: true
+      path: "logs/km-mcp-server.log"
+      rotation:
+        enabled: true
+        max_size: "10MB"
+        backup_count: 5
+        compression: true
+  
+  # Structured logging fields
+  fields:
+    service: "keyboard-maestro-mcp"
+    version: "1.0.0"
+    environment: "production"
+    
+  # Log filters
+  filters:
+    - name: "sensitive_data"
+      type: "redact"
+      patterns: ["password", "token", "secret", "key"]
+
+# Error Handling and Monitoring
+error_handling:
+  reporting:
+    enabled: true
+    sentry_dsn: "${SENTRY_DSN}"
+    environment: "production"
+    
+  recovery:
+    retry_attempts: 3
+    retry_delay: 1.0
+    circuit_breaker:
+      enabled: true
+      failure_threshold: 5
+      timeout: 60.0
+  
+  alerts:
+    enabled: true
+    thresholds:
+      error_rate_per_minute: 10
+      critical_errors_per_hour: 5
+      consecutive_failures: 3
+
+# Performance Monitoring
+monitoring:
+  metrics:
+    enabled: true
+    port: 9090
+    path: "/metrics"
+    
+  health_check:
+    enabled: true
+    path: "/health"
+    interval: 30
+    timeout: 10
+    
+  profiling:
+    enabled: false
+    sample_rate: 0.01
+
+# Rate Limiting
+rate_limiting:
+  enabled: true
+  global:
+    requests_per_minute: 100
+    burst: 20
+  per_client:
+    requests_per_minute: 10
+    burst: 5
+
+# Keyboard Maestro Integration
+keyboard_maestro:
+  engine:
+    path: "/Applications/Keyboard Maestro.app"
+    timeout: 30
+    verify_connection: true
+    
+  applescript:
+    pool_size: 10
+    pool_timeout: 60
+    retry_attempts: 3
+    
+  validation:
+    macro_existence: true
+    trigger_validation: true
+    action_validation: true
+
+# System Integration
+system:
+  accessibility:
+    check_on_startup: true
+    periodic_validation: true
+    validation_interval: 300  # 5 minutes
+    
+  file_operations:
+    allowed_paths:
+      - "/Users"
+      - "/Applications"
+      - "/tmp"
+    blocked_paths:
+      - "/System"
+      - "/Library/System"
+      - "/usr/bin"
+      
+  security:
+    sandbox_mode: false
+    script_execution:
+      timeout: 30
+      memory_limit: 64  # MB
+      
+# Development Overrides
+development:
+  enabled: false
+  overrides:
+    log_level: "DEBUG"
+    auth_required: false
+    rate_limiting_enabled: false
+    host: "127.0.0.1"
+    port: 8000

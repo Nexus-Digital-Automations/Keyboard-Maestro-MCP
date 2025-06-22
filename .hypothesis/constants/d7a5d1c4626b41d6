@@ -1,0 +1,4 @@
+# file: /tmp/python-executor/script_1750622061113_4671.py
+# hypothesis_version: 6.135.14
+
+['-v', 'pytest']

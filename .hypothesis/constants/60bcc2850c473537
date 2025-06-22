@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/utils/configuration.py
+# hypothesis_version: 6.135.14
+
+[100, 1024, 8000, 65535, '100', '127.0.0.1', '30', '50', '60', '8000', 'CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'MCP_AUTH_REQUIRED', 'MCP_DEV_MODE', 'MCP_HOST', 'MCP_JWT_AUDIENCE', 'MCP_JWT_JWKS_URL', 'MCP_LOG_LEVEL', 'MCP_MAX_CONCURRENT', 'MCP_PORT', 'MCP_TIMEOUT', 'MCP_TRANSPORT', 'WARNING', 'development', 'false', 'invalid', 'issues', 'keyboard-maestro-mcp', 'km_mcp_server.log', 'listen_address', 'log_level', 'log_to_file', 'logs', 'max_operations', 'network_enabled', 'production', 'r', 'server_mode', 'status', 'stdio', 'streamable-http', 'test', 'test_write.tmp', 'timeout_seconds', 'transport_type', 'true', 'valid', 'warnings', 'websocket']

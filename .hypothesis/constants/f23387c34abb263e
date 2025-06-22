@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/validators/sanitizers.py
+# hypothesis_version: 6.135.14
+
+[255, 260, 1000, 5000, 10000, '\x00', '"', '%', '&', '../', '..\\', './', '.\\', '/', '<', '>', 'Removed null bytes', 'URL decoded path', '[\\x00-\\x1F\\x7F]', '[^a-zA-Z0-9\\s\\-_\\.]', '\\', '\\"', '\\\\', '\\s+', 'applescript', 'delete\\s+', 'do\\s+shell\\s+script', 'identifier', 'minimal', 'paranoid', 'path', 'restart\\s+computer', 'set\\s+volume', 'shut\\s+down', 'standard', 'strict', 'string', 'system\\s+events', 'text']

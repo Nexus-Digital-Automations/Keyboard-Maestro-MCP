@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/types/domain_types.py
+# hypothesis_version: 6.135.14
+
+[0.0, 0.8, 100, 300, 'active', 'application', 'content_type', 'device_type', 'endpoint', 'event', 'event_type', 'inactive', 'json', 'key', 'kmmacros', 'last_activity', 'modifiers', 'path', 'plist', 'schedule', 'terminated', 'xml']

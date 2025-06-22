@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/boundaries/km_boundaries.py
+# hypothesis_version: 6.135.14
+
+[300, 3600, 1000000, '.*key.*', '.*password.*', '.*secret.*', '.*token.*', '<script[^>]*>', '\\\\x[0-9a-fA-F]{2}', '\\x00', 'active', 'active_operations', 'cleanup_interval', 'context', 'data:.*base64', 'details', 'invalid_operation', 'javascript:', 'macro_execution', 'max_concurrent', 'max_per_minute', 'max_variable_size', 'operations_by_type', 'password', 'permission_denied', 'pw', 'rate_limit', 'rate_limit_config', 'resource_limit', 'scope_violation', 'secret', 'security_policy', 'status', 'timestamp', 'type', 'unknown', 'variable_access']

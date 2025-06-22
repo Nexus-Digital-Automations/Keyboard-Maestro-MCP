@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/types/identifiers.py
+# hypothesis_version: 6.135.14
+
+[255, 'ActionID', 'ApplicationBundleID', 'ExecutionID', 'GroupName', 'GroupUUID', 'MacroName', 'MacroUUID', 'PluginID', 'TriggerID', 'VariableName', 'VariableScope']

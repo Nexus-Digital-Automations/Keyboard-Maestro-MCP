@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/validators/km_validators.py
+# hypothesis_version: 6.135.14
+
+[255, 1000, 10000, '"', '/System/', '/etc/', '/usr/bin/', 'Calculator', 'Finder', 'Keyboard Maestro', 'Local__', 'Mail', 'Safari', 'System Events', 'TextEdit', '[\\x00-\\x1f\\x7f]', '\\', '\\"', '\\.\\./', '\\\\', '\\beval\\b', '\\bexec\\b', '\\brm\\s+-rf\\b', '\\bsudo\\b', 'applescript', 'execution_method', 'key', 'macro_identifier', 'password', 'pw', 'remote', 'secret', 'timeout', 'url', 'web']

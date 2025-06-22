@@ -1,0 +1,87 @@
+# Development Dependencies for Keyboard Maestro MCP Server
+# This file contains dependencies needed for development, testing, and code quality
+
+## Code Quality and Formatting
+black>=23.11.0               # Code formatter
+ruff>=0.1.6                 # Fast linter and formatter
+isort>=5.12.0               # Import sorter
+pre-commit>=3.5.0           # Pre-commit hooks
+
+## Static Analysis
+mypy>=1.7.0                 # Type checker
+pylint>=3.0.0               # Code quality checker
+flake8>=6.1.0               # Style guide enforcement
+vulture>=2.10               # Dead code finder
+bandit>=1.7.5               # Security linter
+
+## Testing
+pytest>=7.4.0               # Testing framework
+pytest-asyncio>=0.21.0      # Async testing support
+pytest-cov>=4.1.0           # Coverage reporting
+pytest-mock>=3.12.0         # Mock support
+pytest-timeout>=2.2.0       # Test timeout handling
+pytest-xdist>=3.5.0         # Parallel test execution
+
+## Property-Based Testing
+hypothesis>=6.100.0          # Property-based testing (also in main requirements)
+
+## Performance Testing
+locust>=2.17.0              # Load testing
+memory-profiler>=0.61.0     # Memory profiling
+py-spy>=0.3.14              # Sampling profiler
+
+## Security Testing
+safety>=2.3.0               # Dependency vulnerability scanner
+pip-audit>=2.6.0            # Audit Python packages
+
+## Documentation
+sphinx>=7.2.0               # Documentation generator
+sphinx-rtd-theme>=1.3.0     # Read the Docs theme
+sphinx-autodoc-typehints>=1.25.0  # Type hints in docs
+myst-parser>=2.0.0          # Markdown parser for Sphinx
+
+## Development Tools
+ipython>=8.18.0             # Enhanced Python shell
+jupyter>=1.0.0              # Notebook environment
+rich>=13.7.0                # Rich text and beautiful formatting
+typer>=0.9.0                # CLI development
+watchdog>=3.0.0             # File system monitoring
+
+## Contract Testing
+pact-python>=1.7.0          # Contract testing
+pytest-contracts>=0.2.0     # Contract test integration
+
+## API Testing
+httpx>=0.25.0               # HTTP client for testing
+respx>=0.20.0               # HTTP request mocking
+
+## Database and Migration Testing (if needed)
+alembic>=1.13.0             # Database migrations
+pytest-alembic>=0.10.0      # Alembic testing
+
+## Environment Management
+python-dotenv>=1.0.0        # Environment variables (also in main requirements)
+environs>=10.3.0            # Environment variable parsing
+
+## Debugging
+debugpy>=1.8.0              # Python debugger
+pdb-attach>=3.2.0           # Remote debugging
+icecream>=2.1.3             # Debug printing
+
+## Git Hooks and Automation
+gitpython>=3.1.0            # Git integration
+pre-commit-hooks>=4.5.0     # Common pre-commit hooks
+
+## Installation Notes:
+# 
+# Install all development dependencies:
+# uv pip install -r requirements-dev.txt
+#
+# Or with pip:
+# pip install -r requirements-dev.txt
+#
+# Setup pre-commit hooks after installation:
+# pre-commit install
+#
+# Run all quality checks:
+# pre-commit run --all-files

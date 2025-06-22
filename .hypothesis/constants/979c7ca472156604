@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/core/km_interface.py
+# hypothesis_version: 6.135.14
+
+[0.0, 0.01, 0.1, 10.0, 300, ':', 'disabled_macro', 'enabled', 'enabled:', 'error', 'exists', 'exists:', 'group', 'last_used', 'name', 'name:', 'output', 'success', 'test_macro', 'true', 'uuid', 'uuid:']

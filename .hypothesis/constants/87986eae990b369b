@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/core/applescript_pool.py
+# hypothesis_version: 6.135.14
+
+[0.1, 5.0, 30.0, 60.0, 300.0, 100, '-e', 'age', 'configuration', 'connection_id', 'connection_metrics', 'error', 'error_count', 'id', 'idle_time', 'max_connections', 'max_idle_time', 'min_connections', 'osascript', 'output', 'pool_status', 'queue_size', 'return "healthy"', 'status', 'success', 'total_connections', 'use_count', 'utf-8']

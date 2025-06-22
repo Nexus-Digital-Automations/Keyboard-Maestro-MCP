@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/contracts/validators.py
+# hypothesis_version: 6.135.14
+
+[0.0, 0.1, 1.0, 100, 255, 300, 320, 600, 1000, 1024, 1080, 1920, 4096, 65535, '.', 'CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'WARNING', '[\\s\\-\\(\\)\\+\\.]', '^[a-zA-Z0-9_\\s\\-]+$', 'actions', 'auth_required', 'bottom_right', 'cpu_threshold', 'curl.*\\|.*sh', 'development_mode', 'disk_threshold', 'eval\\s*\\(', 'exec\\s*\\(', 'file_event', 'group_id', 'host', 'key', 'log_level', 'memory_threshold', 'modifiers', 'name', 'operation_timeout', 'os\\.system', 'passthru', 'path', 'port', 'rm\\s+-rf', 'schedule', 'shell_exec', 'stdio', 'streamable-http', 'subprocess\\.', 'sudo\\s+', 'system\\s*\\(', 'system_event', 'top_left', 'transport', 'triggers', 'websocket', 'wget.*\\|.*sh', 'x', 'y']

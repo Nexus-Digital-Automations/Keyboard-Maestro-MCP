@@ -1,0 +1,4 @@
+# file: /tmp/python-executor/script_1750622249229_9359.py
+# hypothesis_version: 6.135.14
+
+['-v', 'tests/contracts/', 'tests/types/']

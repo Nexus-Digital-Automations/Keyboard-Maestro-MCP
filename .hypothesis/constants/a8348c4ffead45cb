@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/contracts/invariants.py
+# hypothesis_version: 6.135.14
+
+[100, 1000, 'active_operations', 'corrupted_macros', 'cpu_usage_percent', 'critical', 'enabled_macros', 'error', 'failed_operations', 'global_variables', 'granted_permissions', 'info', 'local_variables', 'macro_integrity', 'memory_usage_mb', 'orphaned_locals', 'permission_boundary', 'queued_operations', 'required_permissions', 'resource_limits', 'total_macros', 'variable_scope', 'warning']

@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/boundaries/system_boundaries.py
+# hypothesis_version: 6.135.14
+
+[0.0, 0.5, 1.0, 5.0, 10.0, 15.0, 30.0, 100, 300, 1024, 'block', 'cpu', 'disk_io', 'end', 'file_operation', 'macro_creation', 'macro_deletion', 'macro_execution', 'macro_modification', 'memory', 'network', 'network_operation', 'start', 'start_time', 'system_operation', 'throttle', 'type', 'warn']

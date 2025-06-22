@@ -1,0 +1,4 @@
+# file: /tmp/python-executor/script_1750570173381_4406.py
+# hypothesis_version: 6.135.14
+
+['--cov=src', '-k', '-v']

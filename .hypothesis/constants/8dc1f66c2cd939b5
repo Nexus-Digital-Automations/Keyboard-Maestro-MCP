@@ -1,0 +1,4 @@
+# file: /Users/jeremyparker/Desktop/Claude Coding Projects/Keyboard-Maestro-MCP/src/core/km_error_handler.py
+# hypothesis_version: 6.135.14
+
+["Can't get macro", 'access', 'applescript_runtime', 'applescript_syntax', 'compile error', 'execution_timeout', 'invalid_parameters', 'macro.*disabled', 'macro.*not found', 'macro_disabled', 'macro_not_found', 'memory.*limit', 'not authorized', 'not found', 'permission', 'permission denied', 'permission_denied', 'rate limit', 'rate_limit_exceeded', 'resource.*exhausted', 'runtime error', 'syntax error', 'timeout', 'timeout|timed out', 'too many requests', 'variable_not_found', 'variable_scope_error']
