@@ -26,7 +26,7 @@ from dataclasses import dataclass
 import aiohttp
 
 from src.types.domain_types import MacroUUID, MacroName, VariableName
-from src.types.enumerations import VariableScope, ExecutionMethod
+from .types.enumerations import VariableScope, ExecutionMethod
 from src.validators.km_validators import sanitize_applescript_string
 from src.contracts.decorators import requires, ensures
 

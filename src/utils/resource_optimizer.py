@@ -29,7 +29,7 @@ from enum import Enum
 from collections import deque
 import weakref
 
-from src.contracts.decorators import requires, ensures
+from .contracts.decorators import requires, ensures
 from src.utils.logging_config import get_logger
 
 

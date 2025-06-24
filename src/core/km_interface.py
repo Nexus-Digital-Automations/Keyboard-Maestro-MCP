@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 import asyncio
 from uuid import UUID, uuid4
 
-from src.types.domain_types import MacroUUID, MacroName, VariableName, GroupUUID, MacroExecutionContext
+from .types.domain_types import MacroUUID, MacroName, VariableName, GroupUUID, MacroExecutionContext
 from src.types.enumerations import ExecutionMethod, VariableScope, MacroState
 from src.contracts.decorators import requires, ensures
 from src.contracts.exceptions import PreconditionViolation, PostconditionViolation

@@ -13,8 +13,8 @@ import os
 import re
 from pathlib import Path
 
-from src.validators.input_validators import BaseValidator, ValidationResult, ValidationSeverity
-from src.types.values import ScreenCoordinates, ScreenArea, ConfidenceScore
+from .validators.input_validators import BaseValidator, ValidationResult, ValidationSeverity
+from .types.values import ScreenCoordinates, ScreenArea, ConfidenceScore
 from src.types.results import OperationError, ErrorType
 
 # Supported image formats for template matching

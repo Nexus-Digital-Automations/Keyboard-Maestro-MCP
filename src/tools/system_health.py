@@ -28,8 +28,8 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
-from src.contracts.decorators import requires, ensures
-from src.types.domain_types import HealthStatus, ServiceType, DiagnosticLevel
+from .contracts.decorators import requires, ensures
+from .types.domain_types import HealthStatus, ServiceType, DiagnosticLevel
 from src.utils.logging_config import get_logger
 
 

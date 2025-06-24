@@ -10,7 +10,7 @@ import logging
 import time
 
 from fastmcp import FastMCP
-from src.core.communication_core import (
+from .core.communication_core import (
     CommunicationCore, CommunicationService, NotificationConfiguration
 )
 from src.contracts.decorators import requires, ensures

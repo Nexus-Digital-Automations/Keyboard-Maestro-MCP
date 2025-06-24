@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Any
 from fastmcp import FastMCP, Context
 import asyncio
 
-from src.contracts.decorators import requires, ensures
+from .contracts.decorators import requires, ensures
 from src.core.system_operations import system_manager, OperationStatus
 from src.validators.system_validators import system_validator
 from src.boundaries.permission_checker import permission_checker, PermissionType

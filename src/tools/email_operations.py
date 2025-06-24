@@ -11,7 +11,7 @@ import asyncio
 import time
 
 from fastmcp import FastMCP
-from src.core.communication_core import (
+from .core.communication_core import (
     CommunicationCore, CommunicationService, CommunicationResult,
     EmailConfiguration, EmailAccount
 )

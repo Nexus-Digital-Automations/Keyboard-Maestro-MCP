@@ -13,7 +13,7 @@ import asyncio
 import time
 
 from src.types.domain_types import OCRTextExtraction
-from src.types.values import ScreenArea, ScreenCoordinates, ConfidenceScore, FilePath, ColorRGB
+from .types.values import ScreenArea, ScreenCoordinates, ConfidenceScore, FilePath, ColorRGB
 from src.contracts.decorators import requires, ensures
 from src.contracts.validators import is_valid_screen_area, is_valid_confidence_threshold
 from src.validators.visual_validators import validate_screen_bounds, validate_image_file

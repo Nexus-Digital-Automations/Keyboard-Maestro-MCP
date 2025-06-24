@@ -353,6 +353,55 @@ class ComprehensiveSystemBoundary:
 # Default system boundary instance
 DEFAULT_SYSTEM_BOUNDARY = ComprehensiveSystemBoundary()
 
+class SystemBoundaryManager:
+    """Main system boundary management interface.
+    
+    This class provides the primary interface for system boundary validation,
+    resource monitoring, and operation coordination across the MCP server.
+    """
+    
+    def __init__(self):
+        self.boundary = ComprehensiveSystemBoundary()
+    
+    def validate_operation(self, operation_id: str, operation_type: str, 
+                          estimated_resources: Dict[ResourceType, float],
+                          timeout: Optional[float] = None) -> SystemBoundaryResult:
+        """Validate operation against all system boundaries."""
+        return self.boundary.validate_system_operation(
+            operation_id, operation_type, estimated_resources, timeout
+        )
+    
+    def start_operation(self, operation_id: str, operation_type: str,
+                       resource_usage: Dict[ResourceType, float]) -> None:
+        """Register operation start for tracking."""
+        self.boundary.resource_monitor.register_operation_start(operation_id, resource_usage)
+        self.boundary.concurrency_controller.start_operation(operation_id, operation_type)
+    
+    def end_operation(self, operation_id: str, 
+                     resource_usage: Dict[ResourceType, float]) -> None:
+        """Register operation end for tracking."""
+        self.boundary.resource_monitor.register_operation_end(operation_id, resource_usage)
+        self.boundary.concurrency_controller.end_operation(operation_id)
+    
+    def get_system_status(self) -> Dict[str, Any]:
+        """Get current system status and resource usage."""
+        current_usage = self.boundary.resource_monitor._get_current_usage()
+        active_ops = len(self.boundary.concurrency_controller.active_operations)
+        
+        return {
+            "resource_usage": current_usage,
+            "active_operations": active_ops,
+            "max_concurrent": self.boundary.concurrency_controller.max_concurrent,
+            "resource_limits": {
+                rt.value: {
+                    "max": limit.max_value,
+                    "warning": limit.warning_threshold,
+                    "enforcement": limit.enforcement_action
+                }
+                for rt, limit in self.boundary.resource_monitor.limits.items()
+            }
+        }
+
 def validate_system_boundary(operation_id: str, operation_type: str, 
                            estimated_resources: Dict[ResourceType, float],
                            timeout: Optional[float] = None) -> SystemBoundaryResult:
@@ -360,3 +409,91 @@ def validate_system_boundary(operation_id: str, operation_type: str,
     return DEFAULT_SYSTEM_BOUNDARY.validate_system_operation(
         operation_id, operation_type, estimated_resources, timeout
     )
+
+def validate_system_permissions(operation_type: str, user_context: Optional[Dict] = None) -> bool:
+    """Validate system permissions for operation type.
+    
+    Args:
+        operation_type: Type of operation to validate
+        user_context: Optional user context for permission checking
+        
+    Returns:
+        bool: True if operation is permitted, False otherwise
+    """
+    # Basic permission validation
+    # In a full implementation, this would check against user roles,
+    # system policies, and operation-specific permissions
+    
+    restricted_operations = {
+        "system_shutdown", "kernel_access", "raw_disk_access", 
+        "network_configuration", "security_policy_modification"
+    }
+    
+    if operation_type in restricted_operations:
+        return False
+    
+    # Allow standard Keyboard Maestro operations
+    allowed_operations = {
+        "macro_execution", "macro_creation", "macro_modification", "macro_deletion",
+        "variable_read", "variable_write", "file_operation", "applescript_execution",
+        "clipboard_access", "window_management", "system_integration"
+    }
+    
+    return operation_type in allowed_operations or operation_type.startswith("plugin_")
+
+def check_resource_limits(resource_usage: Dict[ResourceType, float]) -> SystemBoundaryResult:
+    """Check if resource usage is within acceptable limits.
+    
+    Args:
+        resource_usage: Dictionary of resource types and their usage levels
+        
+    Returns:
+        SystemBoundaryResult: Result indicating if limits are respected
+    """
+    return DEFAULT_SYSTEM_BOUNDARY.resource_monitor.check_resource_availability(
+        "resource_check", resource_usage
+    )
+
+def validate_file_operations(file_path: str, operation_type: str, user_context: Optional[Dict] = None) -> bool:
+    """Validate file operation permissions and safety.
+    
+    Args:
+        file_path: Path to file being operated on
+        operation_type: Type of file operation (read, write, delete, etc.)
+        user_context: Optional user context for permission checking
+        
+    Returns:
+        bool: True if file operation is allowed, False otherwise
+    """
+    import os
+    
+    # Basic file operation validation
+    # Check for dangerous paths
+    dangerous_paths = {
+        "/System", "/usr/bin", "/bin", "/sbin", "/etc",
+        "/var/log", "/var/db", "/Library/Security"
+    }
+    
+    # Normalize path
+    normalized_path = os.path.normpath(file_path)
+    
+    # Check if path starts with any dangerous location
+    for dangerous in dangerous_paths:
+        if normalized_path.startswith(dangerous):
+            return False
+    
+    # Check operation type permissions
+    if operation_type in {"delete", "modify", "execute"}:
+        # More restrictive for destructive operations
+        if "/Applications/" in normalized_path or "/Library/" in normalized_path:
+            return False
+    
+    # Allow operations in user directories and safe locations
+    safe_prefixes = {
+        os.path.expanduser("~/"),
+        "/tmp/",
+        "/var/tmp/",
+        "/Users/"
+    }
+    
+    return any(normalized_path.startswith(safe) for safe in safe_prefixes)

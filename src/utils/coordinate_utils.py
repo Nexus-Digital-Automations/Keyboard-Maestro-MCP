@@ -10,7 +10,7 @@ from enum import Enum
 import subprocess
 import json
 
-from src.contracts.decorators import requires, ensures
+from .contracts.decorators import requires, ensures
 from src.contracts.exceptions import ValidationError
 from src.types.domain_types import ScreenCoordinates, ScreenArea
 

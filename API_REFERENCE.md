@@ -73,14 +73,24 @@ Each tool operation includes security validation:
 
 ```python
 # Security context for all operations
-SecurityContext {
-  user_id: str                 # Authenticated user identifier
-  session_id: str              # Unique session identifier
-  capability_level: enum       # READ_ONLY, BASIC, ADVANCED, ADMIN
-  permitted_operations: set    # Allowed tool operations
-  resource_limits: dict        # CPU, memory, timeout constraints
-  audit_enabled: bool          # Whether operations are logged
-}
+from dataclasses import dataclass
+from typing import Set, Dict, Any
+from enum import Enum
+
+class CapabilityLevel(Enum):
+    READ_ONLY = "READ_ONLY"
+    BASIC = "BASIC"
+    ADVANCED = "ADVANCED"
+    ADMIN = "ADMIN"
+
+@dataclass
+class SecurityContext:
+    user_id: str                 # Authenticated user identifier
+    session_id: str              # Unique session identifier
+    capability_level: CapabilityLevel  # READ_ONLY, BASIC, ADVANCED, ADMIN
+    permitted_operations: Set[str]  # Allowed tool operations
+    resource_limits: Dict[str, Any]  # CPU, memory, timeout constraints
+    audit_enabled: bool          # Whether operations are logged
 ```
 
 ## Tool Reference Documentation

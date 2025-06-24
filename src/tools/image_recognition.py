@@ -9,7 +9,7 @@ from typing import Optional, Dict, Any, List
 import logging
 from fastmcp import FastMCP
 
-from src.core.visual_automation import VisualAutomation
+from .core.visual_automation import VisualAutomation
 from src.tools.image_basic import register_basic_image_tools
 from src.tools.image_advanced import register_advanced_image_tools
 

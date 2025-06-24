@@ -379,6 +379,162 @@ class AlertLevel(Enum):
         return self == AlertLevel.CRITICAL
 
 
+class AudioOperation(Enum):
+    """Audio control operations with capability information."""
+    PLAY = "play"
+    SET_VOLUME = "volume"
+    MUTE = "mute"
+    UNMUTE = "unmute"
+    GET_VOLUME = "get_volume"
+    
+    def is_volume_related(self) -> bool:
+        """Check if operation relates to volume control."""
+        return self in (AudioOperation.SET_VOLUME, AudioOperation.MUTE, 
+                       AudioOperation.UNMUTE, AudioOperation.GET_VOLUME)
+    
+    def is_read_only(self) -> bool:
+        """Check if operation only reads system state without modifying it."""
+        return self == AudioOperation.GET_VOLUME
+
+
+class PluginScriptType(Enum):
+    """Types of scripts a custom plugin action can execute with security classification."""
+    APPLESCRIPT = "applescript"
+    SHELL = "shell"
+    PYTHON = "python"
+    JAVASCRIPT = "javascript"
+    PHP = "php"
+    
+    def is_interpreted_language(self) -> bool:
+        """Check if script type uses an interpreter."""
+        return self in (PluginScriptType.PYTHON, PluginScriptType.JAVASCRIPT, PluginScriptType.PHP)
+    
+    def requires_system_access(self) -> bool:
+        """Check if script type requires elevated system access."""
+        return self in (PluginScriptType.SHELL, PluginScriptType.APPLESCRIPT)
+    
+    def get_file_extension(self) -> str:
+        """Get appropriate file extension for script type."""
+        extensions = {
+            PluginScriptType.APPLESCRIPT: "scpt",
+            PluginScriptType.SHELL: "sh",
+            PluginScriptType.PYTHON: "py",
+            PluginScriptType.JAVASCRIPT: "js",
+            PluginScriptType.PHP: "php"
+        }
+        return extensions.get(self, "txt")
+    
+    def is_secure_by_default(self) -> bool:
+        """Check if script type has built-in security restrictions."""
+        return self in (PluginScriptType.JAVASCRIPT, PluginScriptType.PYTHON)
+
+
+class PluginOutputHandling(Enum):
+    """How a plugin's output should be handled with behavior classification."""
+    IGNORE = "ignore"
+    SHOW_BRIEFLY = "show_briefly"
+    SHOW_IN_WINDOW = "show_in_window"
+    PASTE_RESULTS = "paste_results"
+    TYPE_RESULTS = "type_results"
+    SAVE_TO_VARIABLE = "save_to_variable"
+    SAVE_TO_CLIPBOARD = "save_to_clipboard"
+    
+    def modifies_system_state(self) -> bool:
+        """Check if output handling modifies system state."""
+        return self in (PluginOutputHandling.PASTE_RESULTS, PluginOutputHandling.TYPE_RESULTS,
+                       PluginOutputHandling.SAVE_TO_VARIABLE, PluginOutputHandling.SAVE_TO_CLIPBOARD)
+    
+    def requires_user_interface(self) -> bool:
+        """Check if output handling requires user interface interaction."""
+        return self in (PluginOutputHandling.SHOW_BRIEFLY, PluginOutputHandling.SHOW_IN_WINDOW)
+    
+    def requires_variable_name(self) -> bool:
+        """Check if output handling requires a variable name parameter."""
+        return self == PluginOutputHandling.SAVE_TO_VARIABLE
+    
+    def is_persistent_storage(self) -> bool:
+        """Check if output is stored persistently."""
+        return self in (PluginOutputHandling.SAVE_TO_VARIABLE, PluginOutputHandling.SAVE_TO_CLIPBOARD)
+
+
+class PluginLifecycleState(Enum):
+    """Plugin lifecycle states with transition validation."""
+    CREATED = "created"
+    VALIDATED = "validated"
+    INSTALLED = "installed"
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    FAILED = "failed"
+    REMOVED = "removed"
+    
+    def is_operational(self) -> bool:
+        """Check if plugin can be executed in this state."""
+        return self == PluginLifecycleState.ACTIVE
+    
+    def can_be_activated(self) -> bool:
+        """Check if plugin can be activated from this state."""
+        return self in (PluginLifecycleState.INSTALLED, PluginLifecycleState.INACTIVE)
+    
+    def can_be_removed(self) -> bool:
+        """Check if plugin can be removed from this state."""
+        return self in (PluginLifecycleState.INSTALLED, PluginLifecycleState.INACTIVE, 
+                       PluginLifecycleState.FAILED)
+    
+    def is_terminal_state(self) -> bool:
+        """Check if this is a terminal state."""
+        return self in (PluginLifecycleState.REMOVED, PluginLifecycleState.FAILED)
+    
+    def can_transition_to(self, target: 'PluginLifecycleState') -> bool:
+        """Check if transition to target state is valid."""
+        valid_transitions = {
+            PluginLifecycleState.CREATED: {PluginLifecycleState.VALIDATED, PluginLifecycleState.FAILED},
+            PluginLifecycleState.VALIDATED: {PluginLifecycleState.INSTALLED, PluginLifecycleState.FAILED},
+            PluginLifecycleState.INSTALLED: {PluginLifecycleState.ACTIVE, PluginLifecycleState.INACTIVE, PluginLifecycleState.REMOVED},
+            PluginLifecycleState.ACTIVE: {PluginLifecycleState.INACTIVE, PluginLifecycleState.REMOVED},
+            PluginLifecycleState.INACTIVE: {PluginLifecycleState.ACTIVE, PluginLifecycleState.REMOVED},
+            PluginLifecycleState.FAILED: {PluginLifecycleState.REMOVED},
+            PluginLifecycleState.REMOVED: set()  # Terminal state
+        }
+        return target in valid_transitions.get(self, set())
+
+
+class PluginSecurityLevel(Enum):
+    """Security classification levels for plugins."""
+    TRUSTED = "trusted"        # Pre-approved safe operations
+    SANDBOXED = "sandboxed"    # Limited system access
+    RESTRICTED = "restricted"  # Requires explicit permission
+    DANGEROUS = "dangerous"    # High-risk operations
+    
+    def allows_system_access(self) -> bool:
+        """Check if security level allows system access."""
+        return self in (PluginSecurityLevel.TRUSTED, PluginSecurityLevel.RESTRICTED)
+    
+    def requires_user_approval(self) -> bool:
+        """Check if security level requires user approval."""
+        return self in (PluginSecurityLevel.RESTRICTED, PluginSecurityLevel.DANGEROUS)
+    
+    def can_access_network(self) -> bool:
+        """Check if security level allows network access."""
+        return self != PluginSecurityLevel.SANDBOXED
+    
+    def get_risk_level(self) -> int:
+        """Get numeric risk level (0-3, higher is more risky)."""
+        risk_levels = {
+            PluginSecurityLevel.TRUSTED: 0,
+            PluginSecurityLevel.SANDBOXED: 1,
+            PluginSecurityLevel.RESTRICTED: 2,
+            PluginSecurityLevel.DANGEROUS: 3
+        }
+        return risk_levels.get(self, 3)
+
+
+class VoiceGender(Enum):
+    """Text-to-speech voice gender types."""
+    MALE = "male"
+    FEMALE = "female"
+    NEUTRAL = "neutral"
+
+
 class SessionStatus(Enum):
     """MCP session status for lifecycle management."""
     ACTIVE = "active"
@@ -400,4 +556,15 @@ TERMINAL_EXECUTION_STATES = frozenset(
 )
 RECOVERABLE_ERROR_TYPES = frozenset(
     error_type for error_type in ErrorType if error_type.is_recoverable()
+)
+
+# Plugin-specific constants
+SUPPORTED_PLUGIN_SCRIPT_TYPES = frozenset(script_type for script_type in PluginScriptType)
+VALID_PLUGIN_OUTPUT_HANDLERS = frozenset(handler for handler in PluginOutputHandling)
+VALID_PLUGIN_LIFECYCLE_STATES = frozenset(state for state in PluginLifecycleState)
+OPERATIONAL_PLUGIN_STATES = frozenset(
+    state for state in PluginLifecycleState if state.is_operational()
+)
+TERMINAL_PLUGIN_STATES = frozenset(
+    state for state in PluginLifecycleState if state.is_terminal_state()
 )

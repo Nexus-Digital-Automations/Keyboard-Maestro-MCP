@@ -29,7 +29,7 @@ from pathlib import Path
 import json
 from datetime import datetime, timedelta
 
-from src.contracts.decorators import requires, ensures
+from .contracts.decorators import requires, ensures
 from src.contracts.validators import is_valid_threshold_config
 from src.types.domain_types import PerformanceThreshold, ResourceType, AlertLevel
 from src.utils.logging_config import get_logger

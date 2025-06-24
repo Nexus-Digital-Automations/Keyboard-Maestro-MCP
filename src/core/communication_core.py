@@ -14,7 +14,7 @@ import re
 from abc import ABC, abstractmethod
 
 from src.types.domain_types import EmailAddress, PhoneNumber, MessageContent
-from src.types.values import FilePath, create_file_path
+from .types.values import FilePath, create_file_path
 from src.contracts.decorators import requires, ensures
 from src.contracts.validators import is_valid_email, is_valid_phone_number
 from src.core.km_interface import KMInterface

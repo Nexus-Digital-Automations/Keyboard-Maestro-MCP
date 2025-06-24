@@ -27,7 +27,7 @@ from collections import deque, defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from src.contracts.decorators import requires, ensures
+from .contracts.decorators import requires, ensures
 from src.utils.logging_config import get_logger
 
 

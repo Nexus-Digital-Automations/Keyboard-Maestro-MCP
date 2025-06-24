@@ -10,7 +10,7 @@ import logging
 from fastmcp import FastMCP
 
 from src.types.domain_types import OCRTextExtraction
-from src.types.values import ScreenArea, ScreenCoordinates, create_confidence_score, create_screen_coordinate
+from .types.values import ScreenArea, ScreenCoordinates, create_confidence_score, create_screen_coordinate
 from src.core.visual_automation import VisualAutomation, OCRResult, OCRLanguage
 from src.contracts.decorators import requires, ensures
 from src.validators.visual_validators import validate_screen_bounds, validate_language_code

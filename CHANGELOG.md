@@ -361,29 +361,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *Before:*
 ```python
-result = await client.call_tool("km_file_operations", {
-    "operation": "copy",
-    "source_path": "/path/to/source",
-    "destination_path": "/path/to/dest"
-})
-# Result: {"success": true}
+async def example():
+    result = await client.call_tool("km_file_operations", {
+        "operation": "copy",
+        "source_path": "/path/to/source",
+        "destination_path": "/path/to/dest"
+    })
+    # Result: {"success": true}
 ```
 
 *After:*
 ```python
-result = await client.call_tool("km_file_operations", {
-    "operation": "copy", 
-    "source_path": "/path/to/source",
-    "destination_path": "/path/to/dest"
-})
-# Result: {
-#   "success": true,
-#   "metadata": {
-#     "file_size": 1024,
-#     "timestamp": "2025-06-17T10:00:00Z",
-#     "operation_id": "file_op_123"
-#   }
-# }
+async def example():
+    result = await client.call_tool("km_file_operations", {
+        "operation": "copy", 
+        "source_path": "/path/to/source",
+        "destination_path": "/path/to/dest"
+    })
+    # Result: {
+    #   "success": true,
+    #   "metadata": {
+    #     "file_size": 1024,
+    #     "timestamp": "2025-06-17T10:00:00Z",
+    #     "operation_id": "file_op_123"
+    #   }
+    # }
 ```
 
 **Migration:** Update result parsing to handle the new metadata structure.
@@ -393,19 +395,21 @@ result = await client.call_tool("km_file_operations", {
 *Before:*
 ```python
 # Relative positioning
-await client.call_tool("km_window_manager", {
-    "operation": "move",
-    "position": {"x": 100, "y": 200}  # Relative to current position
-})
+async def example():
+    await client.call_tool("km_window_manager", {
+        "operation": "move",
+        "position": {"x": 100, "y": 200}  # Relative to current position
+    })
 ```
 
 *After:*
 ```python
 # Absolute positioning
-await client.call_tool("km_window_manager", {
-    "operation": "move", 
-    "position": {"x": 100, "y": 200}  # Absolute screen coordinates
-})
+async def example():
+    await client.call_tool("km_window_manager", {
+        "operation": "move", 
+        "position": {"x": 100, "y": 200}  # Absolute screen coordinates
+    })
 ```
 
 **Migration:** Convert all relative window positions to absolute coordinates.
@@ -628,4 +632,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-*This changelog is automatically updated with each release. For the most current information, see the [releases page](https://github.com/your-username/keyboard-maestro-mcp/releases).*
+*This changelog is automatically updated with each release. For release downloads and detailed release information, see the project's GitHub releases page when available.*

@@ -18,7 +18,7 @@ import re
 from datetime import datetime
 
 from src.types.domain_types import VariableName, VariableValue
-from src.types.enumerations import VariableScope
+from .types.enumerations import VariableScope
 from src.core.variable_operations import (
     VariableEntry, VariableMetadata, VariableSnapshot,
     DictionaryEntry, ClipboardEntry, ClipboardSnapshot

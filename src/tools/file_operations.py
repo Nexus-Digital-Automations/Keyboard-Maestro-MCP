@@ -9,7 +9,7 @@ from fastmcp import FastMCP, Context
 from pathlib import Path
 import asyncio
 
-from src.contracts.decorators import requires, ensures
+from .contracts.decorators import requires, ensures
 from src.contracts.exceptions import ValidationError, PermissionDeniedError
 from src.core.system_operations import system_manager, OperationStatus
 from src.validators.system_validators import system_validator

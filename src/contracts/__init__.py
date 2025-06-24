@@ -18,7 +18,7 @@ Key Exports:
 """
 
 # Contract Decorators
-from src.contracts.decorators import (
+from .decorators import (
     requires,
     ensures, 
     invariant,
@@ -26,7 +26,7 @@ from src.contracts.decorators import (
 )
 
 # Contract Exceptions
-from src.contracts.exceptions import (
+from .exceptions import (
     ContractViolation,
     PreconditionViolation,
     PostconditionViolation,
@@ -41,7 +41,7 @@ from src.contracts.exceptions import (
 )
 
 # Core Validators
-from src.contracts.validators import (
+from .validators import (
     # Keyboard Maestro Domain Validators
     is_valid_macro_identifier,
     is_valid_macro_name,
@@ -77,8 +77,24 @@ from src.contracts.validators import (
     validate_file_operation_data
 )
 
+# Plugin Contracts
+from .plugin_contracts import (
+    plugin_creation_contract,
+    plugin_installation_contract,
+    plugin_validation_contract,
+    plugin_lifecycle_contract,
+    plugin_removal_contract,
+    plugin_security_contract,
+    is_valid_plugin_structure,
+    is_safe_script_content,
+    plugin_exists,
+    has_valid_bundle_structure,
+    CONTRACT_ERROR_MESSAGES,
+    get_contract_error_message
+)
+
 # System Invariants
-from src.contracts.invariants import (
+from .invariants import (
     system_invariant_checker,
     InvariantDefinition,
     InvariantSeverity,
@@ -176,6 +192,12 @@ __all__ = [
     'is_valid_macro_identifier', 'is_valid_macro_name', 'is_valid_variable_name',
     'is_valid_screen_coordinates', 'is_valid_file_path', 'is_safe_script_content',
     'validate_macro_creation_data', 'validate_file_operation_data',
+    
+    # Plugin Contracts
+    'plugin_creation_contract', 'plugin_installation_contract', 'plugin_validation_contract',
+    'plugin_lifecycle_contract', 'plugin_removal_contract', 'plugin_security_contract',
+    'is_valid_plugin_structure', 'plugin_exists', 'has_valid_bundle_structure',
+    'CONTRACT_ERROR_MESSAGES', 'get_contract_error_message',
     
     # Invariants
     'system_invariant_checker', 'InvariantDefinition', 'InvariantSeverity',

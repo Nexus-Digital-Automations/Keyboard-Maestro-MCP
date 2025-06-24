@@ -11,10 +11,10 @@ from enum import Enum
 import uuid
 import logging
 
-from src.types import (
+from .types import (
     MacroIdentifier, MacroUUID, MacroName, GroupUUID, ExecutionMethod
 )
-from src.types.domain_types import MacroExecutionResult, MacroCreationData, MacroModificationData
+from .types.domain_types import MacroExecutionResult, MacroCreationData, MacroModificationData
 from src.contracts.decorators import requires, ensures
 from src.contracts.validators import (
     is_valid_macro_identifier, is_valid_timeout, 

@@ -1,6 +1,6 @@
-# MIT License
+MIT License
 
-Copyright (c) 2025 Keyboard Maestro MCP Server Project
+Copyright (c) 2025 Keyboard Maestro MCP Server Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,44 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-## Third-Party Licenses
-
-This project includes dependencies with their own licenses:
-
-### FastMCP
-- License: MIT
-- Copyright: FastMCP Contributors
-- Repository: https://github.com/jlowin/fastmcp
-
-### Pydantic
-- License: MIT
-- Copyright: Samuel Colvin and contributors
-- Repository: https://github.com/pydantic/pydantic
-
-### Hypothesis
-- License: Mozilla Public License 2.0
-- Copyright: David R. MacIver
-- Repository: https://github.com/HypothesisWorks/hypothesis
-
-### AsyncIO
-- License: Python Software Foundation License
-- Part of Python standard library
-
-### Other Dependencies
-See requirements.txt for complete list of dependencies and their licenses.
-
-## Attribution
-
-This project builds upon the excellent work of:
-- The Keyboard Maestro team for creating the powerful automation platform
-- The FastMCP community for the Model Context Protocol implementation
-- The Python community for the robust ecosystem and testing frameworks
-- All contributors who provided feedback, testing, and improvements
-
-## License History
-
-- v1.0.0+: MIT License
-- v0.1.0 - v0.9.0: MIT License (development versions)
-
-For questions about licensing, please contact the project maintainers.

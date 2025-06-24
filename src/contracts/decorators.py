@@ -24,7 +24,7 @@ from functools import wraps
 from typing import Callable, Any, Dict, Optional, TypeVar, Union
 from uuid import uuid4
 
-from src.contracts.exceptions import (
+from .exceptions import (
     ViolationContext, ViolationType, PreconditionViolation, 
     PostconditionViolation, InvariantViolation,
     create_precondition_violation, create_postcondition_violation

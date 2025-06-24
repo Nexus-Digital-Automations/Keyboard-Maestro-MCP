@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Any, Tuple
 from fastmcp import FastMCP, Context
 import asyncio
 
-from src.contracts.decorators import requires, ensures
+from .contracts.decorators import requires, ensures
 from src.validators.system_validators import system_validator
 from src.boundaries.permission_checker import permission_checker, PermissionType
 from src.utils.coordinate_utils import coordinate_validator, get_main_display_bounds

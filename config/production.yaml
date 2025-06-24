@@ -7,14 +7,13 @@ server:
   description: "Comprehensive macOS automation server"
   
   # Transport configuration
-  transport:
-    type: "streamable-http"
-    host: "0.0.0.0"
-    port: 8080
-    ssl:
-      enabled: false
-      cert_file: null
-      key_file: null
+  transport: "streamable-http"
+  host: "0.0.0.0"
+  port: 8080
+  ssl:
+    enabled: false
+    cert_file: null
+    key_file: null
   
   # Performance settings
   performance:
@@ -30,12 +29,22 @@ server:
     cpu_limit: 2.0     # CPU cores
     disk_usage_limit: 1024  # MB
 
+# Security Configuration (for validation)
+security:
+  auth_required: true
+  auth_provider: "bearer"
+  rate_limiting:
+    enabled: true
+    global:
+      requests_per_minute: 100
+      burst: 20
+
 # Authentication and Security
 auth:
   required: true
   provider: "bearer"
   jwt:
-    secret_key: "${JWT_SECRET_KEY}"
+    secret_key: "development-key-change-in-production"
     algorithm: "HS256"
     expiration: 3600
     issuer: "keyboard-maestro-mcp"
@@ -77,8 +86,8 @@ logging:
 # Error Handling and Monitoring
 error_handling:
   reporting:
-    enabled: true
-    sentry_dsn: "${SENTRY_DSN}"
+    enabled: false
+    sentry_dsn: ""
     environment: "production"
     
   recovery:

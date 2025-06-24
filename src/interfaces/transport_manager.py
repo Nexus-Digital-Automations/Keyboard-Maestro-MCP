@@ -26,7 +26,7 @@ from enum import Enum
 import time
 
 from fastmcp import FastMCP
-from src.utils.configuration import ServerConfiguration
+from .utils.configuration import ServerConfiguration
 from src.contracts.decorators import requires, ensures
 from src.contracts.validators import is_valid_server_configuration
 from src.types.enumerations import TransportType

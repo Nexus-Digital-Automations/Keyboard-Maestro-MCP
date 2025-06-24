@@ -27,7 +27,7 @@ import uuid
 
 from fastmcp import Context
 
-from src.utils.configuration import ServerConfiguration
+from .utils.configuration import ServerConfiguration
 from src.core.km_interface import KeyboardMaestroInterface
 from src.contracts.decorators import requires, ensures
 from src.types.domain_types import SessionStatus, ContextInfo
@@ -310,6 +310,15 @@ class MCPContextManager:
             self._logger.debug(f"Cleaned up {len(expired_contexts)} contexts, "
                              f"{len(expired_sessions)} sessions")
     
+    def get_audio_core(self) -> 'AudioCore':
+        """Get AudioCore instance.
+        
+        Returns:
+            AudioCore instance for audio operations
+        """
+        from src.core.audio_core import AudioCore
+        return AudioCore(self._km_interface)
+    
     async def get_statistics(self) -> Dict[str, Any]:
         """Get context manager statistics.
         
@@ -355,3 +364,60 @@ class MCPContextManager:
             
         except Exception as e:
             self._logger.error(f"Error during context manager shutdown: {e}")
+
+
+# Global instance for convenience functions
+_context_manager = None
+
+
+def initialize_context_manager(config: ServerConfiguration, km_interface: KeyboardMaestroInterface) -> MCPContextManager:
+    """Initialize the global context manager.
+    
+    Args:
+        config: Server configuration
+        km_interface: Keyboard Maestro interface
+        
+    Returns:
+        Initialized context manager instance
+    """
+    global _context_manager
+    _context_manager = MCPContextManager(config, km_interface)
+    return _context_manager
+
+
+def get_km_interface() -> KeyboardMaestroInterface:
+    """Get KM interface instance from global context manager.
+    
+    Returns:
+        Keyboard Maestro interface instance
+    """
+    global _context_manager
+    if _context_manager is None:
+        raise RuntimeError("Context manager not initialized")
+    return _context_manager._km_interface
+
+
+def get_audio_core() -> 'AudioCore':
+    """Get AudioCore instance from global context manager.
+    
+    Returns:
+        AudioCore instance for audio operations
+    """
+    global _context_manager
+    if _context_manager is None:
+        raise RuntimeError("Context manager not initialized")
+    return _context_manager.get_audio_core()
+
+
+def get_communication_core() -> 'CommunicationCore':
+    """Get CommunicationCore instance from global context manager.
+    
+    Returns:
+        CommunicationCore instance for communication operations
+    """
+    global _context_manager
+    if _context_manager is None:
+        raise RuntimeError("Context manager not initialized")
+    # This would normally be part of the context manager
+    from src.core.communication_core import CommunicationCore
+    return CommunicationCore(get_km_interface())

@@ -25,17 +25,17 @@ from uuid import UUID
 from pathlib import Path
 
 # Import domain types and exceptions
-from src.types.identifiers import (
+from ..types.identifiers import (
     MacroUUID, MacroName, VariableName, GroupUUID, TriggerID, ActionID
 )
-from src.types.values import (
+from ..types.values import (
     ScreenCoordinates, ScreenArea, ConfidenceScore
 )
-from src.types.enumerations import (
+from ..types.enumerations import (
     VariableScope, ExecutionMethod, TriggerType, ActionType, 
     ApplicationOperation, FileOperation, ClickType
 )
-from src.contracts.exceptions import (
+from .exceptions import (
     ViolationContext, ViolationType, create_precondition_violation
 )
 
@@ -361,7 +361,7 @@ def is_valid_threshold_config(config: Any) -> bool:
 
 def is_valid_execution_method(method: Any) -> bool:
     """Validate execution method enum value."""
-    from src.types.enumerations import ExecutionMethod
+    from ..types.enumerations import ExecutionMethod
     
     if not isinstance(method, ExecutionMethod):
         return False

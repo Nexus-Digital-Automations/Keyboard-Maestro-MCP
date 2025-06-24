@@ -23,7 +23,7 @@ from enum import Enum
 from abc import ABC, abstractmethod
 
 # Import domain types and contract framework
-from src.types.enumerations import VariableScope, MacroState
+from ..types.enumerations import VariableScope, MacroState
 from src.contracts.exceptions import InvariantViolation, ViolationContext, ViolationType
 
 

@@ -18,7 +18,7 @@ from datetime import datetime
 
 from fastmcp import FastMCP
 from src.types.domain_types import VariableName, VariableValue
-from src.types.enumerations import VariableScope
+from .types.enumerations import VariableScope
 from src.types.results import Result, OperationError, ErrorType
 from src.core.variable_operations import VariableOperations, VariableEntry, VariableMetadata, VariableSnapshot
 from src.validators.variable_validators import VariableNameValidator, VariableScopeValidator, VariableValueValidator

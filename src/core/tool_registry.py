@@ -104,7 +104,9 @@ class ToolRegistry:
                 'src.tools.image_recognition',
                 'src.tools.email_operations',
                 'src.tools.messaging_operations',
-                'src.tools.notification_operations'
+                'src.tools.notification_operations',
+                'src.tools.audio_operations',
+                'src.tools.plugin_management'
             ]
             
             # Load tools from each module
@@ -246,6 +248,8 @@ class ToolRegistry:
             return ToolCategory.OCR_IMAGE
         elif 'email' in name_lower or 'message' in name_lower:
             return ToolCategory.COMMUNICATION
+        elif 'plugin' in name_lower:
+            return ToolCategory.PLUGIN_MANAGEMENT
         else:
             return ToolCategory.SYSTEM_INTEGRATION
     

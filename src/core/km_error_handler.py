@@ -25,7 +25,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from src.types.domain_types import MacroUUID, MacroName, VariableName
-from src.types.enumerations import VariableScope, ExecutionMethod
+from .types.enumerations import VariableScope, ExecutionMethod
 from src.types.domain_types import MacroExecutionContext
 from src.contracts.decorators import requires, ensures
 

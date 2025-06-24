@@ -14,7 +14,7 @@ import subprocess
 import os
 import time
 
-from src.contracts.decorators import requires, ensures
+from .contracts.decorators import requires, ensures
 from src.contracts.exceptions import SystemOperationError, PermissionDeniedError
 from src.types.domain_types import ScreenCoordinates, ScreenArea
 from src.validators.system_validators import system_validator, ValidationResult

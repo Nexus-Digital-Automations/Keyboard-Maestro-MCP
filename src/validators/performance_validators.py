@@ -27,8 +27,8 @@ from dataclasses import dataclass
 from enum import Enum
 import concurrent.futures
 
-from src.contracts.decorators import requires, ensures
-from src.types.domain_types import PerformanceContract, TestResult, LoadTestProfile
+from .contracts.decorators import requires, ensures
+from .types.domain_types import PerformanceContract, TestResult, LoadTestProfile
 from src.utils.logging_config import get_logger
 
 

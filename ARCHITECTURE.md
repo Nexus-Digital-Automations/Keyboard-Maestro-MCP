@@ -475,7 +475,6 @@ class HealthMonitor:
 
 **🖥️ Claude Desktop Integration:**
 ```json
-// Claude Desktop configuration (config.json)
 {
   "mcpServers": {
     "keyboard-maestro": {

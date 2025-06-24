@@ -24,7 +24,7 @@ from typing import Optional, List, Dict, Any, Set
 from dataclasses import dataclass
 
 from src.types.domain_types import MacroUUID, VariableName, GroupUUID
-from src.types.enumerations import VariableScope, MacroState
+from .types.enumerations import VariableScope, MacroState
 from src.contracts.decorators import requires, ensures
 from src.contracts.validators import is_valid_string
 

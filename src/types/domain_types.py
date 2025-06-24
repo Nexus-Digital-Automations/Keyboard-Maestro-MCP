@@ -1,4 +1,4 @@
-# src/types/domain_types.py (Target: <250 lines)
+# src/types/domain_types.py
 """
 Core domain types for the Keyboard Maestro MCP Server.
 
@@ -22,7 +22,9 @@ from .values import (
 from .enumerations import (
     MacroState, VariableScope, TriggerType, ActionType,
     ExecutionStatus, ErrorType, ExecutionMethod,
-    ConnectionStatus, PoolStatus, ResourceType, AlertLevel
+    ConnectionStatus, PoolStatus, ResourceType, AlertLevel,
+    PluginScriptType, PluginOutputHandling, PluginLifecycleState, PluginSecurityLevel,
+    ServerStatus, ComponentStatus
 )
 
 
@@ -256,7 +258,7 @@ class OCRTextExtraction:
     """Individual OCR text extraction with metadata."""
     text: str
     confidence: ConfidenceScore
-    bounding_box: ScreenCoordinates  # Simplified for now
+    bounding_box: ScreenCoordinates
     language: str
     
     def __post_init__(self):
@@ -357,6 +359,314 @@ class MacroExecutionContext:
             raise ValueError("Macro identifier cannot be empty")
 
 
+# Additional Enums needed by other modules
+class SessionStatus(Enum):
+    """Status of MCP session."""
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    TERMINATED = "terminated"
+
+
+class SerializationFormat(Enum):
+    """Supported serialization formats."""
+    JSON = "json"
+    XML = "xml"
+    PLIST = "plist"
+    KMMACROS = "kmmacros"
+    KMLIBRARY = "kmlibrary"
+
+
+class ToolStatus(Enum):
+    """Status of a tool in the MCP server."""
+    ENABLED = "enabled"
+    DISABLED = "disabled"
+    DEPRECATED = "deprecated"
+    EXPERIMENTAL = "experimental"
+
+
+@dataclass(frozen=True)
+class ServiceStatus:
+    """Status of a communication service."""
+    available: bool
+    service_name: str
+    last_check: Optional[str] = None
+    error_message: Optional[str] = None
+
+
+@dataclass(frozen=True)
+class AudioDevice:
+    """Audio device information for macOS."""
+    name: str
+    is_default: bool = False
+    
+    def __post_init__(self):
+        """Validate audio device."""
+        if not self.name or not self.name.strip():
+            raise ValueError("Device name cannot be empty")
+    
+    def __hash__(self) -> int:
+        """Make audio device hashable."""
+        return hash((self.name, self.is_default))
+
+
+@dataclass(frozen=True)
+class MacroExecutionResult:
+    """Result of macro execution operation."""
+    success: bool
+    execution_id: Optional[str] = None
+    result_data: Optional[Dict[str, Any]] = None
+    error_message: Optional[str] = None
+    execution_time: Optional[float] = None
+    
+    def __post_init__(self):
+        """Validate execution result."""
+        if self.success and self.error_message:
+            raise ValueError("Successful result cannot have error message")
+        if not self.success and not self.error_message:
+            raise ValueError("Failed result must have error message")
+
+
+# Plugin Domain Types
+
+@dataclass(frozen=True)
+class PluginParameter:
+    """Configuration for a single parameter in a custom plugin action."""
+    name: str  # The variable name (e.g., KMPARAM_Your_Param_Name)
+    label: str
+    default_value: str = ""
+    parameter_type: str = "text"
+    is_required: bool = False
+    
+    def __post_init__(self):
+        """Validate plugin parameter configuration."""
+        if not self.name or not self.name.strip():
+            raise ValueError("Parameter name cannot be empty")
+        if not self.label or not self.label.strip():
+            raise ValueError("Parameter label cannot be empty")
+        
+        # Validate parameter name format (Keyboard Maestro convention)
+        if not self.name.startswith("KMPARAM_"):
+            raise ValueError("Parameter name must start with 'KMPARAM_'")
+        
+        # Check for valid identifier characters
+        import re
+        param_suffix = self.name[8:]  # Remove 'KMPARAM_' prefix
+        if not re.match(r'^[A-Za-z_][A-Za-z0-9_]*$', param_suffix):
+            raise ValueError("Parameter name must be valid identifier format")
+    
+    def get_variable_name(self) -> str:
+        """Get the Keyboard Maestro variable name for this parameter."""
+        return self.name
+    
+    def __hash__(self) -> int:
+        """Make parameter hashable for use in sets."""
+        return hash((self.name, self.label, self.default_value, self.parameter_type, self.is_required))
+
+
+@dataclass(frozen=True)
+class PluginCreationData:
+    """Complete data structure for creating a new plugin action."""
+    action_name: str
+    script_type: PluginScriptType
+    script_content: str
+    parameters: Optional[List[PluginParameter]] = None
+    output_handling: PluginOutputHandling = PluginOutputHandling.IGNORE
+    output_variable: Optional[str] = None  # For SAVE_TO_VARIABLE
+    security_level: PluginSecurityLevel = PluginSecurityLevel.SANDBOXED
+    description: Optional[str] = None
+    
+    def __post_init__(self):
+        """Validate plugin creation data."""
+        if not self.action_name or not self.action_name.strip():
+            raise ValueError("Action name cannot be empty")
+        
+        if len(self.action_name) > 100:
+            raise ValueError("Action name cannot exceed 100 characters")
+        
+        if not self.script_content or not self.script_content.strip():
+            raise ValueError("Script content cannot be empty")
+        
+        # Validate output variable requirement
+        if (self.output_handling == PluginOutputHandling.SAVE_TO_VARIABLE and 
+            not self.output_variable):
+            raise ValueError("Output variable name required for SAVE_TO_VARIABLE handling")
+        
+        # Validate parameters if provided
+        if self.parameters:
+            param_names = [param.name for param in self.parameters]
+            if len(param_names) != len(set(param_names)):
+                raise ValueError("Parameter names must be unique")
+    
+    @property
+    def parameter_count(self) -> int:
+        """Get number of configured parameters."""
+        return len(self.parameters) if self.parameters else 0
+    
+    @property
+    def bundle_name(self) -> str:
+        """Get the bundle name for this plugin."""
+        # Clean action name for filesystem use
+        import re
+        clean_name = re.sub(r'[^a-zA-Z0-9_\-\s]', '', self.action_name)
+        clean_name = re.sub(r'\s+', ' ', clean_name).strip()
+        return f"{clean_name}.kmsync"
+    
+    def requires_network_access(self) -> bool:
+        """Check if plugin may require network access based on script type."""
+        # Conservative approach - assume shell and unrestricted plugins may need network
+        return (self.script_type in (PluginScriptType.SHELL, PluginScriptType.PYTHON) or
+                self.security_level.can_access_network())
+    
+    def is_high_risk(self) -> bool:
+        """Check if plugin is classified as high risk."""
+        return (self.security_level.get_risk_level() >= 2 or
+                self.script_type.requires_system_access())
+
+
+@dataclass(frozen=True)
+class PluginMetadata:
+    """Immutable plugin metadata with lifecycle information."""
+    plugin_id: str
+    action_name: str
+    script_type: PluginScriptType
+    state: PluginLifecycleState
+    security_level: PluginSecurityLevel
+    created_at: datetime
+    modified_at: datetime
+    bundle_path: Optional[str] = None
+    description: Optional[str] = None
+    version: str = "1.0.0"
+    
+    def __post_init__(self):
+        """Validate plugin metadata."""
+        if not self.plugin_id or not self.plugin_id.strip():
+            raise ValueError("Plugin ID cannot be empty")
+        if not self.action_name or not self.action_name.strip():
+            raise ValueError("Action name cannot be empty")
+        
+        # Validate version format
+        import re
+        if not re.match(r'^\d+\.\d+\.\d+$', self.version):
+            raise ValueError("Version must be in semantic version format (x.y.z)")
+    
+    def is_operational(self) -> bool:
+        """Check if plugin is operational."""
+        return self.state.is_operational()
+    
+    def can_be_activated(self) -> bool:
+        """Check if plugin can be activated."""
+        return self.state.can_be_activated()
+    
+    def can_be_removed(self) -> bool:
+        """Check if plugin can be removed."""
+        return self.state.can_be_removed()
+    
+    def get_bundle_identifier(self) -> str:
+        """Get the bundle identifier for this plugin."""
+        # Clean plugin ID for bundle identifier
+        import re
+        clean_id = re.sub(r'[^a-zA-Z0-9_\-]', '', self.plugin_id)
+        return f"com.mcp.generated.{clean_id}"
+
+
+@dataclass(frozen=True)
+class PluginValidationResult:
+    """Result of plugin validation with security analysis."""
+    is_valid: bool
+    security_issues: List[str]
+    warnings: List[str]
+    required_permissions: List[str]
+    estimated_risk_level: int  # 0-3 scale
+    validation_errors: Optional[List[str]] = None
+    
+    def __post_init__(self):
+        """Validate result structure."""
+        if self.estimated_risk_level < 0 or self.estimated_risk_level > 3:
+            raise ValueError("Risk level must be between 0 and 3")
+        
+        if not self.is_valid and not self.validation_errors:
+            raise ValueError("Invalid plugin must have validation errors")
+    
+    def is_safe_for_auto_approval(self) -> bool:
+        """Check if plugin is safe for automatic approval."""
+        return (self.is_valid and 
+                len(self.security_issues) == 0 and 
+                self.estimated_risk_level <= 1)
+    
+    def requires_manual_review(self) -> bool:
+        """Check if plugin requires manual security review."""
+        return (len(self.security_issues) > 0 or 
+                self.estimated_risk_level >= 2)
+
+
+@dataclass(frozen=True)
+class PluginInstallationResult:
+    """Result of plugin installation operation."""
+    success: bool
+    plugin_id: str
+    installation_path: Optional[str] = None
+    error_message: Optional[str] = None
+    warnings: Optional[List[str]] = None
+    rollback_available: bool = False
+    
+    def __post_init__(self):
+        """Validate installation result."""
+        if not self.plugin_id or not self.plugin_id.strip():
+            raise ValueError("Plugin ID cannot be empty")
+        
+        if self.success and self.error_message:
+            raise ValueError("Successful installation cannot have error message")
+        
+        if not self.success and not self.error_message:
+            raise ValueError("Failed installation must have error message")
+        
+        if self.success and not self.installation_path:
+            raise ValueError("Successful installation must have installation path")
+    
+    def has_warnings(self) -> bool:
+        """Check if installation has warnings."""
+        return bool(self.warnings and len(self.warnings) > 0)
+
+
+@dataclass(frozen=True)
+class PluginExecutionContext:
+    """Context for plugin execution with security constraints."""
+    plugin_id: str
+    execution_id: str
+    parameters: Dict[str, str]
+    timeout_seconds: int = 30
+    max_memory_mb: int = 100
+    allow_network_access: bool = False
+    allowed_file_paths: Optional[List[str]] = None
+    
+    def __post_init__(self):
+        """Validate execution context."""
+        if not self.plugin_id or not self.plugin_id.strip():
+            raise ValueError("Plugin ID cannot be empty")
+        
+        if not self.execution_id or not self.execution_id.strip():
+            raise ValueError("Execution ID cannot be empty")
+        
+        if self.timeout_seconds <= 0 or self.timeout_seconds > 300:
+            raise ValueError("Timeout must be between 1 and 300 seconds")
+        
+        if self.max_memory_mb <= 0 or self.max_memory_mb > 1000:
+            raise ValueError("Memory limit must be between 1 and 1000 MB")
+    
+    def is_parameter_allowed(self, param_name: str) -> bool:
+        """Check if parameter is in the allowed set."""
+        return param_name in self.parameters
+    
+    def get_resource_limits(self) -> Dict[str, Any]:
+        """Get resource limits for execution."""
+        return {
+            "timeout_seconds": self.timeout_seconds,
+            "max_memory_mb": self.max_memory_mb,
+            "allow_network": self.allow_network_access,
+            "allowed_paths": self.allowed_file_paths or []
+        }
+
+
 # Factory Functions for Safe Construction
 def create_macro_metadata(
     uuid: MacroUUID,
@@ -419,52 +729,94 @@ def create_execution_context(
     )
 
 
-# Additional Enums needed by other modules
-class SessionStatus(Enum):
-    """Status of MCP session."""
-    ACTIVE = "active"
-    INACTIVE = "inactive"
-    TERMINATED = "terminated"
-
-
-class SerializationFormat(Enum):
-    """Supported serialization formats."""
-    JSON = "json"
-    XML = "xml"
-    PLIST = "plist"
-    KMMACROS = "kmmacros"
-    KMLIBRARY = "kmlibrary"
-
-
-class ToolStatus(Enum):
-    """Status of a tool in the MCP server."""
-    ENABLED = "enabled"
-    DISABLED = "disabled"
-    DEPRECATED = "deprecated"
-    EXPERIMENTAL = "experimental"
-
-
-@dataclass(frozen=True)
-class ServiceStatus:
-    """Status of a communication service."""
-    available: bool
-    service_name: str
-    last_check: Optional[str] = None
-    error_message: Optional[str] = None
-
-
-@dataclass(frozen=True)
-class MacroExecutionResult:
-    """Result of macro execution operation."""
-    success: bool
-    execution_id: Optional[str] = None
-    result_data: Optional[Dict[str, Any]] = None
-    error_message: Optional[str] = None
-    execution_time: Optional[float] = None
+def create_plugin_metadata(
+    plugin_id: str,
+    action_name: str,
+    script_type: PluginScriptType,
+    security_level: PluginSecurityLevel = PluginSecurityLevel.SANDBOXED,
+    description: Optional[str] = None
+) -> PluginMetadata:
+    """Create plugin metadata with safe defaults.
     
-    def __post_init__(self):
-        """Validate execution result."""
-        if self.success and self.error_message:
-            raise ValueError("Successful result cannot have error message")
-        if not self.success and not self.error_message:
-            raise ValueError("Failed result must have error message")
+    Args:
+        plugin_id: Unique plugin identifier
+        action_name: Human-readable action name
+        script_type: Type of script
+        security_level: Security classification
+        description: Optional description
+        
+    Returns:
+        PluginMetadata: Validated plugin metadata
+    """
+    now = datetime.now()
+    return PluginMetadata(
+        plugin_id=plugin_id,
+        action_name=action_name,
+        script_type=script_type,
+        state=PluginLifecycleState.CREATED,
+        security_level=security_level,
+        created_at=now,
+        modified_at=now,
+        description=description
+    )
+
+
+def create_plugin_parameter(
+    name: str,
+    label: str,
+    default_value: str = "",
+    parameter_type: str = "text",
+    is_required: bool = False
+) -> PluginParameter:
+    """Create plugin parameter with validation.
+    
+    Args:
+        name: Parameter variable name (must start with KMPARAM_)
+        label: Human-readable label
+        default_value: Default value
+        parameter_type: Parameter type
+        is_required: Whether parameter is required
+        
+    Returns:
+        PluginParameter: Validated parameter
+    """
+    return PluginParameter(
+        name=name,
+        label=label,
+        default_value=default_value,
+        parameter_type=parameter_type,
+        is_required=is_required
+    )
+
+
+def create_plugin_execution_context(
+    plugin_id: str,
+    execution_id: str,
+    parameters: Dict[str, str],
+    timeout_seconds: int = 30,
+    security_level: PluginSecurityLevel = PluginSecurityLevel.SANDBOXED
+) -> PluginExecutionContext:
+    """Create plugin execution context with security defaults.
+    
+    Args:
+        plugin_id: Plugin identifier
+        execution_id: Unique execution ID
+        parameters: Execution parameters
+        timeout_seconds: Execution timeout
+        security_level: Security level for resource limits
+        
+    Returns:
+        PluginExecutionContext: Validated execution context
+    """
+    # Set resource limits based on security level
+    max_memory = 50 if security_level == PluginSecurityLevel.SANDBOXED else 100
+    allow_network = security_level.can_access_network()
+    
+    return PluginExecutionContext(
+        plugin_id=plugin_id,
+        execution_id=execution_id,
+        parameters=parameters,
+        timeout_seconds=timeout_seconds,
+        max_memory_mb=max_memory,
+        allow_network_access=allow_network
+    )

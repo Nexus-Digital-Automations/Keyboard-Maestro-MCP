@@ -17,6 +17,15 @@ from .identifiers import (
     is_valid_macro_identifier, is_valid_variable_name_format
 )
 
+# Plugin Type System
+from .plugin_types import (
+    PluginID, PluginName, PluginBundleID, ScriptContent, PluginPath, SecurityHash,
+    PluginSecurityContext, PluginResourceLimits, PluginIdentifier,
+    create_plugin_id, create_plugin_name, create_script_content, create_security_hash,
+    create_memory_limit, create_timeout_seconds, create_risk_score,
+    plugin_id_to_bundle_id, validate_plugin_compatibility
+)
+
 # Branded Value Types
 from .values import (
     MacroExecutionTimeout, VariableValue, TriggerValue,
@@ -30,6 +39,7 @@ from .enumerations import (
     MacroState, MacroLifecycleState, ExecutionMethod, VariableScope, TriggerType, ActionType,
     ApplicationOperation, FileOperation, ClickType, ExecutionStatus,
     ErrorType, LogLevel, TransportType,
+    PluginScriptType, PluginOutputHandling, PluginLifecycleState, PluginSecurityLevel,
     VALID_VARIABLE_SCOPES, VALID_LIFECYCLE_STATES, SUPPORTED_EXECUTION_METHODS,
     TERMINAL_EXECUTION_STATES, RECOVERABLE_ERROR_TYPES
 )
@@ -39,6 +49,7 @@ from .domain_types import (
     MacroMetadata, TriggerConfiguration, ActionConfiguration,
     MacroDefinition, VariableDefinition, ExecutionContext,
     OperationError, OCRTextExtraction,
+    PluginCreationData, PluginMetadata, PluginValidationResult, PluginParameter,
     create_macro_metadata, create_execution_context
 )
 
@@ -93,6 +104,10 @@ __all__ = [
     'TriggerID', 'ActionID', 'ApplicationBundleID', 'ExecutionID', 'PluginID',
     'MacroIdentifier', 'VariableIdentifier',
     
+    # Plugin Identifier Types
+    'PluginID', 'PluginName', 'PluginBundleID', 'ScriptContent', 'PluginPath', 'SecurityHash',
+    'PluginSecurityContext', 'PluginResourceLimits', 'PluginIdentifier',
+    
     # Value Types
     'MacroExecutionTimeout', 'VariableValue', 'TriggerValue',
     'ScreenCoordinate', 'PixelColor', 'ConfidenceScore', 'ProcessID', 'FilePath',
@@ -102,17 +117,24 @@ __all__ = [
     'MacroState', 'MacroLifecycleState', 'ExecutionMethod', 'VariableScope', 'TriggerType', 'ActionType',
     'ApplicationOperation', 'FileOperation', 'ClickType', 'ExecutionStatus',
     'ErrorType', 'LogLevel', 'TransportType',
+    'PluginScriptType', 'PluginOutputHandling', 'PluginLifecycleState', 'PluginSecurityLevel',
     
     # Domain Types
     'MacroMetadata', 'TriggerConfiguration', 'ActionConfiguration',
     'MacroDefinition', 'VariableDefinition', 'ExecutionContext',
     'OperationError', 'OCRTextExtraction',
+    'PluginCreationData', 'PluginMetadata', 'PluginValidationResult', 'PluginParameter',
     
     # Factory Functions
     'create_macro_uuid', 'create_macro_name', 'create_group_uuid',
     'create_variable_name', 'create_application_bundle_id', 'create_execution_id',
     'create_execution_timeout', 'create_confidence_score', 'create_screen_coordinate',
     'create_file_path', 'create_macro_metadata', 'create_execution_context',
+    
+    # Plugin Factory Functions
+    'create_plugin_id', 'create_plugin_name', 'create_script_content', 'create_security_hash',
+    'create_memory_limit', 'create_timeout_seconds', 'create_risk_score',
+    'plugin_id_to_bundle_id', 'validate_plugin_compatibility',
     
     # Validation Functions
     'is_valid_macro_identifier', 'is_valid_variable_name_format',

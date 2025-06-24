@@ -11,7 +11,7 @@ from pathlib import Path
 import re
 import os
 
-from src.contracts.decorators import requires, ensures
+from .contracts.decorators import requires, ensures
 from src.contracts.exceptions import ValidationError
 from src.types.domain_types import ScreenCoordinates, ScreenArea
 from src.boundaries.permission_checker import permission_checker, PermissionType
